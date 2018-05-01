@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    View {{ bookmark.title }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.bookmark_view'|trans({'%id%' : bookmark.id}) }}</h1>
+
+    {% if bookmark|length %}
+    <div>
+        {{ bookmark.title }}, {{ bookmark.url }}
+    </div>
+    {% else %}
+    <div>
+        No bookmark found!
+    </div>
+    {% endif %}
+    <a href="{{ url('bookmarks_index') }}" title="{{ 'label.back_to_list'|trans }}">{{ 'label.back_to_list'|trans }}</a>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Bookmarks
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.bookmarks_list'|trans }}</h1>
+
+    {% if paginator.data|length %}
+    <ul>
+        {% for row in paginator.data %}
+        <li>{{ row.title|upper }}, {{ row.url|lower }}
+            <a href="{{ url('bookmarks_view', {'id': row.id}) }}" title="{{ 'label.view'|trans }}">
+                {{ 'label.view'|trans }}
+            </a>
+            <br>
+            <a href="{{ url('bookmark_edit', {'id': row.id}) }}" title="{{ 'title.bookmark_edit'|trans({'%id%': row.id}) }}">
+                {{ 'title.bookmark_edit'|trans({'%id%': row.id}) }}
+            </a>
+            <br>
+            <a href="{{ url('bookmark_delete',{'id': row.id}) }}" title="{{ 'title.bookmark_delete'|trans({'%id%': row.id}) }}">
+                {{ 'title.bookmark_delete'|trans({'%id%': row.id}) }}
+            </a>
+        </li>
+        <br>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div>
+        List is empty!
+    </div>
+    {% endif %}
+
+    {# ... #}
+    {% include 'default/_paginator.html.twig' with {
+    paginator: paginator,
+    route_name: 'bookmarks_index_paginated',
+    } %}
+    {# ... #}
+    <a href="{{ url('bookmark_add') }}" title="{{ 'title.bookmark_add'|trans }}">
+        {{ 'title.bookmark_add'|trans }}
+    </a>
+
+
+{% endblock %}
