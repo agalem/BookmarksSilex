@@ -35,6 +35,16 @@ class BookmarksController implements ControllerProviderInterface {
 		           ->method('POST|GET')
 		           ->bind('bookmark_add');
 
+		$controller->match('/{id}/edit', [$this, 'editAction'])
+		           ->method('GET|POST')
+		           ->assert('id', '[1-9]\d*')
+		           ->bind('bookmark_edit');
+
+		$controller->match('/{id}/delete', [$this, 'deleteAction'])
+		           ->method('GET|POST')
+		           ->assert('id', '[1-9]\d*')
+		           ->bind('bookmark_delete');
+
 		return $controller;
 	}
 
@@ -102,6 +112,99 @@ class BookmarksController implements ControllerProviderInterface {
 			]
 		);
 	}
+
+	public function editAction(Application $app, $id, Request $request) {
+
+		$bookmarksRepository = new BookmarksRepository($app['db']);
+		$bookmark = $bookmarksRepository->findOneById($id);
+
+		if(!$bookmark) {
+			$app['session']->getFlashBag()->add(
+				'messages',
+				[
+					'type' => 'warning',
+					'message' => 'message.record_not_found',
+				]
+			);
+
+			return $app->redirect($app['url_generator']->generate('bookmarks_index'), 301);
+
+		}
+
+		$form = $app['form.factory']->createBuilder(BookmarkType::class, $bookmark)->getForm();
+		$form->handleRequest($request);
+
+		if($form->isSubmitted() && $form->isValid()) {
+
+			$bookmarksRepository->save($form->getData());
+
+			$app['session']->getFlashBag()->add(
+				'messages',
+				[
+					'type' => 'success',
+					'message' => 'message.element_successfully_edited',
+				]
+			);
+
+			return $app->redirect($app['url_generator']->generate('bookmarks_index'), 301);
+
+		}
+
+		return $app['twig']->render(
+			'bookmarks/edit.html.twig',
+			[
+				'bookmark' => $bookmark,
+				'form' => $form->createView(),
+			]
+		);
+
+	}
+
+
+	public function deleteAction(Application $app, $id, Request $request) {
+
+		$bookmarksRepository = new BookmarksRepository($app['db']);
+		$bookmark = $bookmarksRepository->findOneById($id);
+
+		if(!$bookmark) {
+			$app['session']->getFlashBag()->add(
+				'messages',
+				[
+					'type' => 'warning',
+					'message' => 'message.record_not_found',
+				]
+			);
+			return $app->redirect($app['url_generator']->generate('bookmarks_index'));
+		}
+
+		$form = $app['form.factory']->createBuilder(FormType::class, $bookmark)->add('id', HiddenType::class)->getForm();
+		$form->handleRequest($request);
+
+		if($form->isSubmitted() && $form->isValid()) {
+
+			$bookmarksRepository->delete($form->getData());
+
+			$app['session']->getFlashBag()->add(
+				'messages', [
+					'type' => 'success',
+					'message' => 'message.element_successfully_deleted',
+				]
+			);
+
+			return $app->redirect( $app['url_generator']->generate('bookmarks_index'), 301);
+
+		}
+
+		return $app['twig']->render(
+			'bookmarks/delete.html.twig',
+			[
+				'bookmark' => $bookmark,
+				'form' => $form->createView(),
+			]
+		);
+
+	}
+
 
 
 }

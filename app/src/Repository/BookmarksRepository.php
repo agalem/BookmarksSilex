@@ -48,6 +48,7 @@ class BookmarksRepository {
 	protected function queryAll() {
 		$queryBuilder = $this->db->createQueryBuilder();
 		return $queryBuilder -> select('b.id', 'b.title', 'b.url')
+		                     ->orderBy('b.id', 'ASC')
 		                     ->from('si_bookmarks', 'b');
 	}
 
@@ -68,5 +69,11 @@ class BookmarksRepository {
 
 			return $this->db->insert('si_bookmarks', $bookmark);
 		}
+	}
+
+	public function delete($bookmark) {
+
+		return $this->db->delete('si_bookmarks', ['id' => $bookmark['id']]);
+
 	}
 }
