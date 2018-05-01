@@ -45,7 +45,6 @@ class TagRepository
 	public function findAllPaginated($page = 1) {
 		$countQueryBuilder = $this->queryAll()
 			->select('COUNT(DISTINCT t.id) AS total_results')
-			->orderBy('t.id', 'ASC')
 			->setMaxResults(1);
 
 		$paginator = new Paginator($this->queryAll(), $countQueryBuilder);
@@ -76,6 +75,7 @@ class TagRepository
 		$queryBuilder = $this->db->createQueryBuilder();
 
 		return $queryBuilder->select('t.id', 't.name')
+							->orderBy('t.id', 'ASC')
 							->from('si_tags', 't');
 	}
 

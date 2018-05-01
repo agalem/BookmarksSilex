@@ -52,4 +52,21 @@ class BookmarksRepository {
 	}
 
 
+	public function save($bookmark)
+	{
+		$currentDateTime = new \DateTime();
+		$bookmark['modified_at'] = $currentDateTime->format('Y-m-d H:i:s');
+		if (isset($bookmark['id']) && ctype_digit((string) $bookmark['id'])) {
+			// update record
+			$id = $bookmark['id'];
+			unset($bookmark['id']);
+
+			return $this->db->update('si_bookmarks', $bookmark, ['id' => $id]);
+		} else {
+			// add new record
+			$bookmark['created_at'] = $currentDateTime->format('Y-m-d H:i:s');
+
+			return $this->db->insert('si_bookmarks', $bookmark);
+		}
+	}
 }
