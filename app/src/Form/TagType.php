@@ -49,10 +49,12 @@ class TagType extends AbstractType {
 		);
 	}
 
-	public function configureOptions( OptionsResolver $resolver ) {
+	public function configureOptions(OptionsResolver $resolver)
+	{
 		$resolver->setDefaults(
 			[
 				'validation_groups' => 'tag-default',
+				'tag_repository' => null,
 			]
 		);
 	}

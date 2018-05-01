@@ -7,9 +7,9 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueTagValidator extends ConstraintValidator {
 
-	public function validate($value, Constraint $constraint) {
-
-		if(!$constraint->repository) {
+	public function validate($value, Constraint $constraint)
+	{
+		if (!$constraint->repository) {
 			return;
 		}
 
@@ -18,12 +18,11 @@ class UniqueTagValidator extends ConstraintValidator {
 			$constraint->elementId
 		);
 
-		if($result && count($result)) {
+		if ($result && count($result)) {
 			$this->context->buildViolation($constraint->message)
 			              ->setParameter('{{ tag }}', $value)
 			              ->addViolation();
 		}
-
 	}
 
 }

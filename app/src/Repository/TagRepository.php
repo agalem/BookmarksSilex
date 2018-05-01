@@ -100,29 +100,17 @@ class TagRepository
 
 	}
 
-	public function findForUniqueness($name, $id = null ) {
-
+	public function findForUniqueness($name, $id = null)
+	{
 		$queryBuilder = $this->queryAll();
 		$queryBuilder->where('t.name = :name')
-			->setParameter(':name', $name, \PDO::PARAM_STR);
-
-		if($id) {
-			$queryBuilder->andWhere('t.id = :id')
-				->setParameter(':id', $id, \PDO::PARAM_INT);
+		             ->setParameter(':name', $name, \PDO::PARAM_STR);
+		if ($id) {
+			$queryBuilder->andWhere('t.id <> :id')
+			             ->setParameter(':id', $id, \PDO::PARAM_INT);
 		}
 
 		return $queryBuilder->execute()->fetchAll();
-
 	}
 
-	public function configureOptions(OptionsResolver $resolver) {
-
-		$resolver->setDefaults(
-			[
-				'validator_groups' => 'tag-default',
-				'tag_repository' => null,
-			]
-		);
-
-	}
 }

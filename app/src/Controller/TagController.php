@@ -97,8 +97,8 @@ class TagController implements ControllerProviderInterface
 
 		$form = $app['form.factory']->createBuilder(
 			TagType::class,
-			$tag
-			//['tag_repository' => new TagRepository($app['db'])]
+			$tag,
+			['tag_repository' => new TagRepository($app['db'])]
 		)->getForm();
 
 		$form->handleRequest($request);
@@ -146,8 +146,8 @@ class TagController implements ControllerProviderInterface
 
 		$form = $app['form.factory']->createBuilder(
 			TagType::class,
-			$tag
-			//['tag_repository' => new TagRepository($app['db'])]
+			$tag,
+			['tag_repository' => new TagRepository($app['db'])]
 		)->getForm();
 
 		$form->handleRequest($request);
