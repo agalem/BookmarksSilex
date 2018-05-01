@@ -8,7 +8,9 @@
 namespace Controller;
 
 use Form\BookmarkType;
+use JMS\Serializer\Tests\Fixtures\Tag;
 use Repository\BookmarksRepository;
+use Repository\TagRepository;
 use Silex\Application;
 use Silex\Api\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,7 +88,12 @@ class BookmarksController implements ControllerProviderInterface {
 	public function addAction(Application $app, Request $request) {
 		$bookmark = [];
 
-		$form = $app['form.factory']->createBuilder(BookmarkType::class, $bookmark)->getForm();
+		$form = $app['form.factory']->createBuilder(
+			BookmarkType::class,
+			$bookmark,
+			['tag_repository' => new TagRepository($app['db'])]
+		)->getForm();
+
 		$form->handleRequest($request);
 
 		if($form->isSubmitted() && $form->isValid()) {
@@ -131,7 +138,12 @@ class BookmarksController implements ControllerProviderInterface {
 
 		}
 
-		$form = $app['form.factory']->createBuilder(BookmarkType::class, $bookmark)->getForm();
+		$form = $app['form.factory']->createBuilder(
+			BookmarkType::class,
+			$bookmark,
+			['tag_repository' => new TagRepository($app['db'])]
+		)->getForm();
+
 		$form->handleRequest($request);
 
 		if($form->isSubmitted() && $form->isValid()) {

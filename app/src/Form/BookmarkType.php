@@ -55,6 +55,16 @@ class BookmarkType extends AbstractType {
 			]
 		);
 		$builder->add(
+			'tags',
+			TextType::class,
+			[
+				'required' => true,
+				'attr' => [
+					'max_length' => 128,
+				],
+			]
+		);
+		$builder->add(
 			'is_public',
 			ChoiceType::class,
 			[
@@ -66,12 +76,16 @@ class BookmarkType extends AbstractType {
 				'required' => true,
 			]
 		);
+		$builder->get('tags')->addModelTransformer(
+			new TagsDataTransformer($options['tag_repository'])
+		);
 	}
 
 	public function configureOptions( OptionsResolver $resolver ) {
 		$resolver->setDefaults(
 			[
 				'validation_groups' => 'bookmark-default',
+				'tag_repository' => null,
 			]
 		);
 	}
@@ -79,6 +93,17 @@ class BookmarkType extends AbstractType {
 	public function getBlockPrefix()
 	{
 		return 'bookmark_type';
+	}
+
+	protected function prepareTagsForChoices($tagRepository) {
+		$tags = $tagRepository->findAll();
+		$choices = [];
+
+		foreach ($tags as $tag) {
+			$choices[$tag['name']] = $tag['id'];
+		}
+
+		return $choices;
 	}
 
 }

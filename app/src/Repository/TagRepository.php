@@ -83,13 +83,18 @@ class TagRepository
 
 	public function save($tag) {
 
-		if(isset($tag['id']) && ctype_digit((string) $tag['id'])) {
+		if (isset($tag['id']) && ctype_digit((string) $tag['id'])) {
+			// update record
 			$id = $tag['id'];
 			unset($tag['id']);
 
 			return $this->db->update('si_tags', $tag, ['id' => $id]);
 		} else {
-			return $this->db->insert('si_tags', $tag);
+			// add new record
+			$this->db->insert('si_tags', $tag);
+			$tag['id'] = $this->db->lastInsertId();
+
+			return $tag;
 		}
 
 	}
@@ -111,6 +116,26 @@ class TagRepository
 		}
 
 		return $queryBuilder->execute()->fetchAll();
+	}
+
+	public function findOneByName($name) {
+		$queryBuilder = $this->queryAll();
+		$queryBuilder->where('t.name = :name')
+			->setParameter(':name', $name, \PDO::PARAM_STR);
+
+		$result = $queryBuilder->execute()->fetch();
+
+		return !$result ? [] : $result;
+	}
+
+	public function findById($ids) {
+
+		$queryBuilder = $this->queryAll();
+		$queryBuilder->where('t.id IN (:ids)')
+			->setParameter(':ids', $ids, Connection::PARAM_INT_ARRAY);
+
+		return $queryBuilder->execute()->fetchAll();
+
 	}
 
 }
