@@ -94,6 +94,14 @@
                 <source>title.bookmark_delete</source>
                 <target>Usuń zakładkę #%id%</target>
             </trans-unit>
+            <trans-unit id="label.yes">
+                <source>label.yes</source>
+                <target>Tak</target>
+            </trans-unit>
+            <trans-unit id="label.no">
+                <source>label.no</source>
+                <target>Nie</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

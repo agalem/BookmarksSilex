@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class BookmarkType extends AbstractType {
 
@@ -24,6 +26,20 @@ class BookmarkType extends AbstractType {
 				'required' => true,
 				'attr' => [
 					'max_length' => 128,
+				],
+				'constraints' => [
+					new Assert\NotBlank(
+						[
+							'groups' => ['bookmark-default']
+						]
+					),
+					new Assert\Length(
+						[
+							'groups' => ['bookmark-default'],
+							'min' => 2,
+							'max' => 128,
+						]
+					),
 				],
 			]
 		);
@@ -48,6 +64,14 @@ class BookmarkType extends AbstractType {
 					'label.yes' => 1,
 				],
 				'required' => true,
+			]
+		);
+	}
+
+	public function configureOptions( OptionsResolver $resolver ) {
+		$resolver->setDefaults(
+			[
+				'validation_groups' => 'bookmark-default',
 			]
 		);
 	}

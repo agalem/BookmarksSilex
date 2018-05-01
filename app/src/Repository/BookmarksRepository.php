@@ -47,7 +47,7 @@ class BookmarksRepository {
 
 	protected function queryAll() {
 		$queryBuilder = $this->db->createQueryBuilder();
-		return $queryBuilder -> select('b.id', 'b.title', 'b.url')
+		return $queryBuilder ->select('b.id', 'b.created_at', 'b.modified_at', 'b.title', 'b.url', 'b.is_public')
 		                     ->orderBy('b.id', 'ASC')
 		                     ->from('si_bookmarks', 'b');
 	}

@@ -94,6 +94,14 @@
                 <source>title.bookmark_delete</source>
                 <target>Delete bookmark #%id%</target>
             </trans-unit>
+            <trans-unit id="label.yes">
+                <source>label.yes</source>
+                <target>Yes</target>
+            </trans-unit>
+            <trans-unit id="label.no">
+                <source>label.no</source>
+                <target>No</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
